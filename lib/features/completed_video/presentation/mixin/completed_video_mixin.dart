@@ -1,0 +1,25 @@
+import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
+
+import '../view/completed_video_view.dart';
+
+mixin CompletedVideoMixin on State<CompletedVideoView> {
+  late VideoPlayerController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = VideoPlayerController.networkUrl(Uri.parse(widget.video.video!))
+      ..setLooping(true)
+      ..initialize().whenComplete(() {
+        controller.play();
+        setState(() {});
+      });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+}
