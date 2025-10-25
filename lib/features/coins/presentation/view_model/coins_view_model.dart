@@ -50,13 +50,13 @@ class CoinsViewModel extends ChangeNotifier {
       context: getIt<RouteService>().navigatorKey.currentContext!,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: AppColors.secondary,
+          backgroundColor: AppColors.second,
           title: Column(
             children: [
               SizedBox(height: 20.h),
               Assets.images.check.image(width: 60.w),
               SizedBox(height: 40.h),
-              Text('Coins Successfully Updated', style: AppStyles.semiBold(fontSize: 20)),
+              Text('Coins Successfully Updated', style: AppStyles.medium(fontSize: 20),textAlign: TextAlign.center,),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 12.h),
                 child: Text(
@@ -68,7 +68,7 @@ class CoinsViewModel extends ChangeNotifier {
               SizedBox(height: 8.h),
               CustomButton(
                 title: 'Thanks',
-                onTap: ()=> getIt<RouteService>().popUntil(path: AppRoutes.home),
+                onTap: ()=> getIt<RouteService>().popUntil(path: AppRoutes.bottomBar),
                 backgroundColor: AppColors.red,
                 textColor: AppColors.white,
               ),

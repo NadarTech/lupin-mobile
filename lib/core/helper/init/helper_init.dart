@@ -6,6 +6,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
+import '../../../common/provider/category/category_provider.dart';
 import '../../../common/provider/user/user_provider.dart';
 import '../../../main.dart';
 import '../../consts/app/app_constants.dart';
@@ -25,6 +26,7 @@ class HelperInit {
       SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]),
       MixpanelService.init(),
       getSubscriptions(),
+      getPurchasePage(),
       getOfferings(),
       getIt<LocalService>().init(),
     ]);
@@ -43,14 +45,21 @@ class HelperInit {
   static Future<void> getOfferings() async {
     try {
       final offerings = await Purchases.getOfferings();
-
-      Offering? myOffer = offerings.all["lupin_yearly_subscription"];
+      Offering? myOffer = offerings.all['Lupin Offer'];
       if (myOffer != null) {
-        if (myOffer.availablePackages.isNotEmpty) {
-          if (myOffer.availablePackages.first.storeProduct.introductoryPrice != null) {
-            AppConstants.offer = myOffer;
-          }
-        }
+        AppConstants.offer = myOffer;
+      }
+    } catch (error) {
+      MixpanelService.track(type: EventType.getOfferingsError, args: {'error': error.toString()});
+    }
+  }
+
+  static Future<void> getPurchasePage() async {
+    try {
+      Offerings offerings = await Purchases.getOfferings();
+      Offering? myOffer = offerings.getOffering('Lupin Purchases');
+      if (myOffer != null) {
+        AppConstants.purchaseOffer = myOffer;
       }
     } catch (error) {
       MixpanelService.track(type: EventType.getOfferingsError, args: {'error': error.toString()});
@@ -98,7 +107,10 @@ class HelperInit {
   static void startApp() {
     runApp(
       MultiProvider(
-        providers: [ChangeNotifierProvider<UserProvider>(create: (context) => getIt<UserProvider>())],
+        providers: [
+          ChangeNotifierProvider<UserProvider>(create: (context) => getIt<UserProvider>()),
+          ChangeNotifierProvider<CategoryProvider>(create: (context) => getIt<CategoryProvider>()),
+        ],
         child: const MyApp(),
       ),
     );

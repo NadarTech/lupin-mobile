@@ -1,8 +1,8 @@
-name: lupin
+name: luden
 description: "AI Video Generator"
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.0.19+20
 
 environment:
   sdk: ^3.8.1
@@ -22,13 +22,11 @@ dependencies:
   logger: ^2.6.1
   provider: ^6.1.5
   mixpanel_flutter: ^2.4.4
-  purchases_ui_flutter: 9.1.0
-  purchases_flutter: 9.1.0
+  purchases_ui_flutter: 9.5.0
+  purchases_flutter: 9.5.0
   fluttertoast: ^8.2.12
   envied: ^1.2.0
   upgrader: ^11.5.0
-  sign_in_with_apple: ^7.0.1
-  google_sign_in: ^7.1.1
   in_app_review: ^2.0.10
   video_player: ^2.10.0
   share_plus: ^11.0.0
@@ -41,6 +39,10 @@ dependencies:
   intl:
   gallery_saver_plus:
   cached_network_image: ^3.4.1
+  visibility_detector:
+  flutter_cache_manager:
+  carousel_slider:
+  external_app_launcher:
 
 dev_dependencies:
   flutter_test:
@@ -58,27 +60,26 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/preview/
     - assets/videos/
+    - assets/videos/ob/
+    - assets/videos/home/
     - assets/videos/models/
     - assets/icons/
 
   fonts:
-    - family: PlusJakartaSans
+    - family: Inter
       fonts:
-        - asset: assets/fonts/PlusJakartaSans-ExtraLight.ttf
-          weight: 200
-        - asset: assets/fonts/PlusJakartaSans-Light.ttf
+        - asset: assets/fonts/Inter_18pt-Light.ttf
           weight: 300
-        - asset: assets/fonts/PlusJakartaSans-Regular.ttf
+        - asset: assets/fonts/Inter_18pt-Regular.ttf
           weight: 400
-        - asset: assets/fonts/PlusJakartaSans-Medium.ttf
+        - asset: assets/fonts/Inter_18pt-Medium.ttf
           weight: 500
-        - asset: assets/fonts/PlusJakartaSans-SemiBold.ttf
+        - asset: assets/fonts/Inter_18pt-SemiBold.ttf
           weight: 600
-        - asset: assets/fonts/PlusJakartaSans-Bold.ttf
+        - asset: assets/fonts/Inter_18pt-Bold.ttf
           weight: 700
-        - asset: assets/fonts/PlusJakartaSans-ExtraBold.ttf
-          weight: 800
 
 flutter_gen:
   output: lib/core/consts/gen/
@@ -87,20 +88,17 @@ flutter_gen:
     lottie: true
 
 flutter_native_splash:
-  color: "#0a0a0a"
-  image: assets/images/lupin_logo.png
-  android: true
-  ios: true
+  color: "#171229"
+  image_android: assets/images/small_logo.png
+  image_ios: assets/images/small_logo.png
   android_12:
-    color: "#0a0a0a"
-    image: assets/images/lupin_logo.png
+    color: "#171229"
+    image: assets/images/android12_logo.png
 
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path_ios: "assets/images/lupin_logo.png"
-  image_path_android: "assets/images/lupin_logo.png"
-  adaptive_icon_foreground: "assets/images/lupin_logo.png"
+  image_path_ios: "assets/images/ios_logo.png"
+  image_path_android: "assets/images/ios_logo.png"
   min_sdk_android: 21
   remove_alpha_ios: true
-  adaptive_icon_background: "#ffffff"

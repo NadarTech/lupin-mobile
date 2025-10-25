@@ -11,6 +11,6 @@
 class FontFamily {
   FontFamily._();
 
-  /// Font family: PlusJakartaSans
-  static const String plusJakartaSans = 'PlusJakartaSans';
+  /// Font family: Inter
+  static const String inter = 'Inter';
 }

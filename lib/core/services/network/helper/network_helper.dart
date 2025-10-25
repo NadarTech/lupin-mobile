@@ -9,6 +9,7 @@ class NetworkHelper {
   NetworkHelper(this.dio);
 
   Future<void> onError(DioException exception, ErrorInterceptorHandler handler) async {
+    print("gelen exception ${exception.response?.data}");
     MixpanelService.track(
       type: EventType.httpError,
       args: {'endpoint': exception.requestOptions.path, 'error': exception.response?.data ?? ''},

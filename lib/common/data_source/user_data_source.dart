@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 
 import '../../core/base/model/error_model/base_error_model.dart';
@@ -24,7 +26,7 @@ class UserDataSource {
     return await _networkService.call(
       AppEndpoints.user,
       mapper: (json) => json['accessToken'],
-      data: {'id': uuid},
+      data: {'id': uuid, 'isAndroid': Platform.isAndroid},
       httpTypes: HttpTypes.post,
     );
   }

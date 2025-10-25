@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:toastification/toastification.dart';
 
 import '../../../../common/provider/user/user_provider.dart';
-import '../../../../core/consts/route/app_routes.dart';
 import '../../../../core/services/get_it/get_it_service.dart';
-import '../../../../core/services/route/route_service.dart';
+import '../../../bottom_bar/presentation/view_model/bottom_bar_view_model.dart';
 import '../../data/data_source/generate_by_fal_ai_data_source.dart';
 import '../../data/model/generate_by_fal_ai_model.dart';
 
@@ -45,7 +44,9 @@ class GenerateByFalAIViewModel extends ChangeNotifier {
         title: Text('Your video will be ready in 1 minutes'),
         autoCloseDuration: const Duration(seconds: 5),
       );
-      getIt<RouteService>().popUntil(path: AppRoutes.home);
+      changePortrait(0);
+      selectModel(0);
+      getIt<BottomBarViewModel>().changeIndex(2);
     });
   }
 

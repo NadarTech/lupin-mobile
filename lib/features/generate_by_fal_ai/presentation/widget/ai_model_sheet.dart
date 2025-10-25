@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart';
 
 import '../../../../common/model/ai_model/ai_model.dart';
 import '../../../../core/consts/color/app_colors.dart';
@@ -22,8 +21,9 @@ class AIModelSheet extends StatelessWidget {
     return DefaultTextStyle(
       style: AppStyles.regular(),
       child: Container(
-        color: AppColors.secondary,
+        color: AppColors.second,
         padding: EdgeInsets.symmetric(vertical: 24.h),
+        height: 650.h,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -36,15 +36,15 @@ class AIModelSheet extends StatelessWidget {
                     opacity: 0,
                     child: Assets.icons.close.svg(width: 24.w, color: AppColors.white),
                   ),
-                  Text('Select AI Model', style: AppStyles.medium(fontSize: 22)),
+                  Text('Select AI Model', style: AppStyles.medium(fontSize: 18)),
                   GestureDetector(
                     onTap: getIt<RouteService>().pop,
-                    child: Assets.icons.close.svg(width: 24.w, color: AppColors.white),
+                    child: Assets.icons.close.svg(width: 20.w, color: AppColors.white),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: 15.h),
             buildAIModelList(provider),
           ],
         ),
@@ -69,8 +69,8 @@ class AIModelSheet extends StatelessWidget {
               margin: EdgeInsets.only(bottom: 20.h),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16.r),
-                color: AppColors.primary,
-                border: Border.all(color: AppColors.white, width: 0.5),
+                color: AppColors.grey.withValues(alpha: 0.05),
+                border: Border.all(color: AppColors.grey.withValues(alpha: 0.05), width: 1),
               ),
               child: Column(
                 children: [
@@ -90,40 +90,53 @@ class AIModelSheet extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
       margin: EdgeInsets.only(bottom: 8.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(model.title, style: AppStyles.semiBold(fontSize: 18)),
+                SizedBox(height: 6.h),
+                Text(model.description, style: AppStyles.regular()),
+              ],
+            ),
+          ),
+          SizedBox(width: 6.w),
+          Column(
             children: [
-              Text(model.title, style: AppStyles.semiBold(fontSize: 17)),
-              Spacer(),
               Container(
-                padding: EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-                decoration: BoxDecoration(color: AppColors.secondary, borderRadius: BorderRadius.circular(12)),
+                decoration: BoxDecoration(
+                  color: AppColors.grey.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 7.h),
+                margin: EdgeInsets.only(right: 10.w),
                 child: Row(
                   children: [
-                    Text('${model.coins}  ', style: AppStyles.medium(fontSize: 15)),
-                    Assets.icons.coin.image(width: 18.w),
+                    Assets.icons.coin.svg(width: 16.w),
+                    SizedBox(width: 5.w),
+                    Text('${model.coins}', style: AppStyles.semiBold(fontSize: 12)),
                   ],
                 ),
               ),
-              SizedBox(width: 10.w),
+              SizedBox(height: 7.h),
               Container(
-                padding: EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-                decoration: BoxDecoration(color: AppColors.secondary, borderRadius: BorderRadius.circular(12)),
+                decoration: BoxDecoration(
+                  color: AppColors.grey.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 7.h),
+                margin: EdgeInsets.only(right: 10.w),
                 child: Row(
                   children: [
-                    Text('${model.seconds}  ', style: AppStyles.medium(fontSize: 15)),
                     Assets.icons.time.svg(width: 16.w, color: AppColors.white),
+                    SizedBox(width: 5.w),
+                    Text(model.seconds, style: AppStyles.semiBold(fontSize: 12)),
                   ],
                 ),
               ),
             ],
-          ),
-          SizedBox(height: 12.h),
-          Text(
-            model.description,
-            style: AppStyles.semiBold(color: AppColors.white.withValues(alpha: 0.7)),
           ),
         ],
       ),
@@ -133,14 +146,7 @@ class AIModelSheet extends StatelessWidget {
   Container buildVideoPlayer(AIModel model) {
     return Container(
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(16.r)),
-      child: FittedBox(
-        fit: BoxFit.cover,
-        child: SizedBox(
-          height: model.videoPlayerController.value.size.height,
-          width: model.videoPlayerController.value.size.width,
-          child: ClipRRect(borderRadius: BorderRadius.circular(16.r), child: VideoPlayer(model.videoPlayerController)),
-        ),
-      ),
+      child: FittedBox(fit: BoxFit.cover, child: Image.asset(model.path)),
     );
   }
 }

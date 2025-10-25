@@ -14,6 +14,7 @@ class CustomInput extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final void Function(String)? onChanged;
   final int? maxLines;
+  final Widget? extraButton;
 
   const CustomInput({
     super.key,
@@ -25,18 +26,19 @@ class CustomInput extends StatelessWidget {
     this.onChanged,
     this.inputFormatters,
     this.maxLines,
+    this.extraButton,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
       children: [
         TextFormField(
           obscureText: obscureText ?? false,
           controller: controller,
           validator: validator,
           onChanged: onChanged,
-          style: AppStyles.semiBold(fontSize: 16),
+          style: AppStyles.regular(fontSize: 14),
           inputFormatters: inputFormatters,
           maxLines: maxLines,
           textInputAction: TextInputAction.done,
@@ -46,31 +48,32 @@ class CustomInput extends StatelessWidget {
             suffixIconConstraints: BoxConstraints(maxWidth: 44.w),
             contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 14.h),
             isDense: true,
-            hintStyle: AppStyles.regular(fontSize: 16, color: AppColors.lightGray),
+            hintStyle: AppStyles.regular(fontSize: 14, color: AppColors.lightGrey),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
-              borderSide: BorderSide(color: AppColors.lightGray, width: 0.3),
+              borderSide: BorderSide(color: AppColors.grey.withValues(alpha: 0.05), width: 1),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
-              borderSide: BorderSide(color: AppColors.lightGray, width: 0.3),
+              borderSide: BorderSide(color: AppColors.grey.withValues(alpha: 0.05), width: 1),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
-              borderSide: BorderSide(color: AppColors.lightGray, width: 0.3),
+              borderSide: BorderSide(color: AppColors.grey.withValues(alpha: 0.05), width: 1),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
-              borderSide: BorderSide(color: AppColors.lightGray, width: 0.3),
+              borderSide: BorderSide(color: AppColors.grey.withValues(alpha: 0.05), width: 1),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
-              borderSide: BorderSide(color: AppColors.lightGray, width: 0.3),
+              borderSide: BorderSide(color: AppColors.grey.withValues(alpha: 0.05), width: 1),
             ),
             filled: true,
-            fillColor: AppColors.secondary,
+            fillColor: Color(0xffF5F6F7).withValues(alpha: 0.05),
           ),
         ),
+        ?extraButton,
       ],
     );
   }

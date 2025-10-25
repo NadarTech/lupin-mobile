@@ -9,14 +9,12 @@ class OnboardingViewModel extends ChangeNotifier {
   int currentIndex = 0;
 
   Future<void> changeCurrentIndex() async {
-    if (currentIndex == 3) {
-      getIt<RouteService>().goRemoveUntil(path: AppRoutes.subscriptions);
+    if (currentIndex == 2) {
+      await InAppReview.instance.requestReview();
+      getIt<RouteService>().goRemoveUntil(path: AppRoutes.bottomBar, data: {'firstOpen': true});
     } else {
       currentIndex++;
       notifyListeners();
-      if (await InAppReview.instance.isAvailable() == true && currentIndex == 3) {
-        InAppReview.instance.requestReview();
-      }
     }
   }
 }

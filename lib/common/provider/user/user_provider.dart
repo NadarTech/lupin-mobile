@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/consts/end_point/app_end_points.dart';
 import '../../../core/consts/enum/event_type.dart';
+import '../../../core/consts/enum/http_type_enums.dart';
 import '../../../core/consts/local/app_locals.dart';
 import '../../../core/services/get_it/get_it_service.dart';
 import '../../../core/services/mix_panel/mix_panel_service.dart';
+import '../../../core/services/network/network_service.dart';
 import '../../../core/services/storage/storage_service.dart';
 import '../../../core/services/toast/toast_service.dart';
 import '../../data_source/user_data_source.dart';
@@ -40,5 +43,9 @@ class UserProvider with ChangeNotifier {
   void updateCoins(int coins) {
     user.coins = user.coins - coins;
     notifyListeners();
+  }
+
+  Future<void> updateUser() async {
+    await getIt<NetworkService>().call(AppEndpoints.updateUser, mapper: (_) {}, httpTypes: HttpTypes.get);
   }
 }

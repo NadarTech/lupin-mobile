@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:luden/core/consts/app/app_constants.dart';
 import 'package:provider/provider.dart';
 import 'package:purchases_ui_flutter/views/paywall_view.dart';
 
@@ -24,9 +25,11 @@ class _CoinsViewState extends State<CoinsView> with CoinsMixin {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<CoinsViewModel>();
+    print("şu geldik ${AppConstants.purchaseOffer}");
     return Stack(
       children: [
         PaywallView(
+          offering: AppConstants.purchaseOffer,
           onPurchaseStarted: provider.onPurchaseStarted,
           onPurchaseError: provider.onPurchaseError,
           onPurchaseCompleted: provider.onPurchaseCompleted,

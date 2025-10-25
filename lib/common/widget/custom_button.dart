@@ -15,6 +15,7 @@ class CustomButton extends StatelessWidget {
   final Color? textColor;
   final Color? borderColor;
   final Widget? icon;
+  final Widget? icon2;
 
   const CustomButton({
     super.key,
@@ -27,6 +28,7 @@ class CustomButton extends StatelessWidget {
     this.fontSize,
     this.borderColor,
     this.icon,
+    this.icon2,
   });
 
   @override
@@ -40,12 +42,19 @@ class CustomButton extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(color: borderColor ?? AppColors.transparent, width: 1.5),
-          color: backgroundColor ?? AppColors.white,
+          color: backgroundColor ?? AppColors.red,
+          gradient: backgroundColor == null ? LinearGradient(colors: [AppColors.first, AppColors.secondary]) : null,
         ),
         child: icon == null
-            ? Text(
-                title,
-                style: AppStyles.semiBold(fontSize: fontSize?.w ?? 16, color: textColor ?? AppColors.primary),
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (icon2 != null) ...[icon2!, SizedBox(width: 4.w)],
+                  Text(
+                    title,
+                    style: AppStyles.semiBold(fontSize: fontSize?.w ?? 16, color: textColor ?? AppColors.white),
+                  ),
+                ],
               )
             : Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -53,7 +62,12 @@ class CustomButton extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox.shrink(),
-                    Text(title, style: AppStyles.semiBold(fontSize: 16, color: textColor ?? AppColors.primary)),
+                    Row(
+                      children: [
+                        if (icon2 != null) ...[icon2!, SizedBox(width: 4.w)],
+                        Text(title, style: AppStyles.semiBold(fontSize: 16, color: textColor ?? AppColors.white)),
+                      ],
+                    ),
                     ?icon,
                   ],
                 ),

@@ -7,20 +7,20 @@ import '../text_style/app_text_styles.dart';
 class AppThemes {
   static ThemeData lightTheme = ThemeData(
     fontFamily: AppConstants.fontFamily,
-    scaffoldBackgroundColor: AppColors.primary,
+    scaffoldBackgroundColor: Color(0xff171229),
     appBarTheme: AppBarTheme(
       centerTitle: false,
-      backgroundColor: AppColors.primary,
+      backgroundColor: AppColors.transparent,
       titleTextStyle: AppStyles.medium(color: AppColors.white, fontSize: 30),
     ),
   );
 
   static ThemeData darkTheme = ThemeData(
     fontFamily: AppConstants.fontFamily,
-    scaffoldBackgroundColor: AppColors.primary,
+    scaffoldBackgroundColor: Color(0xff171229),
     appBarTheme: AppBarTheme(
       centerTitle: false,
-      backgroundColor: AppColors.primary,
+      backgroundColor: AppColors.transparent,
       titleTextStyle: AppStyles.medium(color: AppColors.white, fontSize: 30),
     ),
   );

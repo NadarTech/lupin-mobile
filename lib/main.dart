@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:toastification/toastification.dart';
 
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(393, 852),
+      designSize: const Size(375, 812),
       builder: (context, child) {
         return GestureDetector(
           onTap: FocusManager.instance.primaryFocus?.unfocus,
@@ -29,6 +30,12 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               title: AppConstants.appName,
               theme: AppThemes.lightTheme,
+              builder: (context, child) {
+                return AnnotatedRegion(
+                  value: SystemUiOverlayStyle.light,
+                  child: child ?? SizedBox(),
+                );
+              },
               darkTheme: AppThemes.darkTheme,
               navigatorKey: getIt<RouteService>().navigatorKey,
               onGenerateRoute: AppRouter.generateRoute,

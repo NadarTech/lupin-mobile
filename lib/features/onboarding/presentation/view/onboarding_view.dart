@@ -6,7 +6,6 @@ import 'package:video_player/video_player.dart';
 import '../../../../common/widget/custom_button.dart';
 import '../../../../core/consts/color/app_colors.dart';
 import '../../../../core/consts/text_style/app_text_styles.dart';
-import '../../../../core/helper/extension/context.dart';
 import '../mixin/onboarding_mixin.dart';
 import '../view_model/onboarding_view_model.dart';
 
@@ -24,79 +23,92 @@ class _OnboardingViewState extends State<OnboardingView> with OnboardingMixin {
     return Scaffold(
       body: SafeArea(
         top: false,
-        child: SizedBox(
-          height: context.height,
-          width: context.width,
-          child: Stack(
-            children: [
-              if (provider.currentIndex == 0)
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  left: 0,
-                  child: AspectRatio(aspectRatio: 748 / 1172, child: VideoPlayer(controller)),
-                )
-              else if (provider.currentIndex == 1)
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  left: 0,
-                  child: AspectRatio(aspectRatio: 784 / 1176, child: VideoPlayer(controller1)),
-                )
-              else if (provider.currentIndex == 2)
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  left: 0,
-                  child: AspectRatio(aspectRatio: 748 / 1172, child: VideoPlayer(controller2)),
-                )
-              else
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  left: 0,
-                  child: AspectRatio(
-                    aspectRatio: 1024 / 1536,
-                    child: Image.asset(onboardings[provider.currentIndex].image!),
-                  ),
-                ),
-              Positioned(
-                bottom: 0,
-                right: 0,
-                left: 0,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(offset: Offset(0, 9), color: AppColors.primary, spreadRadius: 60, blurRadius: 40),
-                    ],
-                    color: AppColors.primary,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8.h),
-                        child: Text(onboardings[provider.currentIndex].title, style: AppStyles.semiBold(fontSize: 26)),
-                      ),
-                      Text(
-                        onboardings[provider.currentIndex].subtitle,
-                        style: AppStyles.regular(fontSize: 16, color: AppColors.grey),
-                      ),
-                      SizedBox(height: 30.h),
-                      if (provider.currentIndex != 3) buildAnimatedDivider(provider),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 30.h),
-                        child: CustomButton(title: 'Continue', onTap: changeCurrentIndex),
-                      ),
-                    ],
-                  ),
-                ),
+        bottom: false,
+        child: Stack(children: [buildVideo(provider), buildBottomInfo(context, provider)]),
+      ),
+    );
+  }
+
+  Positioned buildBottomInfo(BuildContext context, OnboardingViewModel provider) {
+    return Positioned(
+      bottom: 0,
+      right: 0,
+      left: 0,
+      child: Container(
+        padding: EdgeInsets.only(bottom: MediaQuery.paddingOf(context).bottom, top: 24.h),
+        decoration: BoxDecoration(gradient: LinearGradient(colors: [Color(0xff10172B), AppColors.second])),
+        child: Column(
+          children: [
+            Text(
+              onboardings[provider.currentIndex].title,
+              style: AppStyles.semiBold(fontSize: 30, color: AppColors.grey),
+              textAlign: TextAlign.center,
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 16.h, bottom: 36.h),
+              child: Text(
+                onboardings[provider.currentIndex].subtitle,
+                style: AppStyles.light(fontSize: 16),
+                textAlign: TextAlign.center,
               ),
-            ],
-          ),
+            ),
+            Stack(
+              children: [
+                Container(
+                  width: 100.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16.r),
+                    color: AppColors.grey.withValues(alpha: 0.1),
+                  ),
+                ),
+                Container(
+                  width: ((100 / 3) * (provider.currentIndex + 1)).w,
+                  height: 4.h,
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(16.r), color: AppColors.grey),
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 36.w, vertical: 12.h).copyWith(top: 24.h),
+              child: CustomButton(title: 'Next', onTap: changeCurrentIndex),
+            ),
+          ],
         ),
       ),
+    );
+  }
+
+  Positioned buildVideo(OnboardingViewModel provider) {
+    return Positioned(
+      top: 0.h,
+      right: 0,
+      left: 0,
+      child: SizedBox(
+        height: 600.h,
+        child: VideoPlayer(onboardings[provider.currentIndex].controller!),
+      ),
+    );
+  }
+
+  Column textContent(Widget child, currentIndex) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        child,
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
+          child: Text(onboardings[currentIndex].title, style: AppStyles.semiBold(fontSize: 26)),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: Text(
+            onboardings[currentIndex].subtitle,
+            style: AppStyles.regular(fontSize: 16, color: AppColors.grey),
+          ),
+        ),
+        SizedBox(height: 30.h),
+      ],
     );
   }
 

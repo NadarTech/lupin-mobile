@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../common/model/video/video_model.dart';
-import '../../../../common/widget/custom_app_bar.dart';
 import '../../../../core/consts/color/app_colors.dart';
 import '../../../../core/consts/enum/event_type.dart';
 import '../../../../core/consts/gen/assets.gen.dart';
@@ -48,7 +47,10 @@ class _MyVideosViewState extends State<MyVideosView> with MyVideosMixin {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
                   margin: EdgeInsets.symmetric(horizontal: 12.w).copyWith(bottom: 16.h),
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(12.r), color: AppColors.secondary),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.r),
+                    color: AppColors.grey.withValues(alpha: 0.05),
+                  ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -86,38 +88,57 @@ class _MyVideosViewState extends State<MyVideosView> with MyVideosMixin {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Align(
-            alignment: Alignment.topRight,
-            child: Text(DateFormat.yMMMd().format(video.createdAt), style: AppStyles.medium(fontSize: 13)),
+          Row(
+            children: [
+              Text(video.title, style: AppStyles.medium(fontSize: 14)),
+              Spacer(),
+              Text(DateFormat.yMMMd().format(video.createdAt), style: AppStyles.medium(fontSize: 13)),
+            ],
           ),
-          Text(video.title, style: AppStyles.semiBold(fontSize: 15)),
-          Text(
-            'Status: ${video.status.capitalize()}',
-            style: AppStyles.semiBold(fontSize: 13, color: statusColored(video.status.capitalize())),
+          SizedBox(height: 12.h),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Status:', style: AppStyles.regular(fontSize: 11, color: Color(0xff9CA3AF))),
+              Text(
+                video.status.capitalize(),
+                style: AppStyles.medium(fontSize: 14, color: statusColored(video.status.capitalize())),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Color statusColored(String status){
-    if(status == 'Completed'){
-      return Colors.green;
-    }else if(status == 'Failed'){
-      return AppColors.red;
-    }else{
-      return Colors.yellow;
+  Color statusColored(String status) {
+    if (status == 'Completed') {
+      return Color(0xff95FF00);
+    } else if (status == 'Failed') {
+      return Color(0xffFF0000);
+    } else {
+      return Color(0xff0090FF);
     }
   }
 
-  CustomAppBar buildAppBar(BuildContext context) {
-    return CustomAppBar(
-      title: 'My Videos',
+  AppBar buildAppBar(BuildContext context) {
+    return AppBar(
+      title: Row(
+        children: [
+          Assets.images.splashLogo.svg(width: 30),
+          SizedBox(width: 10.w),
+          Text('My Videos', style: AppStyles.semiBold(fontSize: 16)),
+        ],
+      ),
+      centerTitle: false,
+      forceMaterialTransparency: true,
+      titleSpacing: 16.w,
       actions: [
         GestureDetector(
           onTap: () {
-            ToastService.success('Refreshing', backgroundColor: Colors.green);
+            ToastService.success('Refreshing', backgroundColor: AppColors.first);
             context.read<MyVideosViewModel>().getVideos();
           },
           child: Container(

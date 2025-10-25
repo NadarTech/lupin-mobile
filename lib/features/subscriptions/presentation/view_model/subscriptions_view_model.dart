@@ -43,39 +43,7 @@ class SubscriptionsViewModel extends ChangeNotifier {
       await Purchases.purchaseStoreProduct(product);
       await Future.delayed(const Duration(seconds: 3));
       await getIt<UserProvider>().getUser();
-      showCupertinoDialog(
-        barrierDismissible: false,
-        context: getIt<RouteService>().navigatorKey.currentContext!,
-        builder: (context) {
-          return AlertDialog(
-            backgroundColor: AppColors.secondary,
-            title: Column(
-              children: [
-                SizedBox(height: 20.h),
-                Assets.images.check.image(width: 60.w),
-                SizedBox(height: 40.h),
-                Text('Successful Subscription', style: AppStyles.semiBold(fontSize: 20)),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12.h),
-                  child: Text(
-                    'Your payment has been received successfully. You can start using the app.',
-                    style: AppStyles.regular(fontSize: 14,color: AppColors.grey),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                SizedBox(height: 8.h),
-                CustomButton(
-                  title: 'Thanks',
-                  onTap: ()=> getIt<RouteService>().popUntil(path: AppRoutes.home),
-                  backgroundColor: AppColors.red,
-                  textColor: AppColors.white,
-                ),
-                SizedBox(height: 8.h),
-              ],
-            ),
-          );
-        },
-      );
+      buildShowDialog();
     } on PlatformException catch (error) {
       if ((error).message != 'Purchase was cancelled.') {
         ToastService.warning(error.message);
@@ -86,20 +54,56 @@ class SubscriptionsViewModel extends ChangeNotifier {
     }
   }
 
+  void buildShowDialog() {
+    showCupertinoDialog(
+      barrierDismissible: false,
+      context: getIt<RouteService>().navigatorKey.currentContext!,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: AppColors.secondary,
+          title: Column(
+            children: [
+              SizedBox(height: 20.h),
+              Assets.images.check.image(width: 60.w),
+              SizedBox(height: 40.h),
+              Text('Successful Subscription', style: AppStyles.semiBold(fontSize: 20)),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 12.h),
+                child: Text(
+                  'Your payment has been received successfully. You can start using the app.',
+                  style: AppStyles.regular(fontSize: 14, color: AppColors.grey),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              SizedBox(height: 8.h),
+              CustomButton(
+                title: 'Thanks',
+                onTap: () => getIt<RouteService>().popUntil(path: AppRoutes.bottomBar),
+                backgroundColor: AppColors.red,
+                textColor: AppColors.white,
+              ),
+              SizedBox(height: 8.h),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> onPurchaseStarted(Package package) async {
     if (isLoading == true) return;
     changeLoading(true);
     await MixpanelService.track(type: EventType.onPurchaseStarted, args: {'identifier': package.identifier});
   }
 
-  Future<void> onPurchaseCompleted(_, __) async {
+  Future<void> onPurchaseCompleted(_, _) async {
     try {
       ToastService.success('You are premium member now 🎉');
       await MixpanelService.track(type: EventType.onPurchaseCompleted);
       await Future.delayed(const Duration(seconds: 3));
       await getIt<UserProvider>().getUser();
       changeLoading(false);
-      await getIt<RouteService>().goRemoveUntil(path: AppRoutes.home);
+      buildShowDialog();
     } catch (error) {
       await MixpanelService.track(
         type: EventType.onPurchaseCompletedCatchError,
@@ -123,12 +127,12 @@ class SubscriptionsViewModel extends ChangeNotifier {
 
   Future<void> onRestoreCompleted(CustomerInfo customer) async {
     try {
-      if (customer.entitlements.all['x Subscription']?.isActive == true) {
+      if (customer.entitlements.all['Lupin Subscription']?.isActive == true) {
         await MixpanelService.track(type: EventType.onRestoreCompleted);
-
-        /// TODO: GET USER OR SAVE TO LOCALE
-        ToastService.success('You are premium member now 🎉');
-        getIt<RouteService>().goRemoveUntil(path: AppRoutes.home);
+        await Future.delayed(const Duration(seconds: 3));
+        await getIt<UserProvider>().getUser();
+        changeLoading(false);
+        buildShowDialog();
       } else {
         ToastService.warning('You are not a premium member');
       }

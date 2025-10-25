@@ -9,75 +9,73 @@ import '../view/onboarding_view.dart';
 import '../view_model/onboarding_view_model.dart';
 
 mixin OnboardingMixin on State<OnboardingView> {
-  late VideoPlayerController controller;
-  late VideoPlayerController controller1;
-  late VideoPlayerController controller2;
-  late OnboardingViewModel provider;
+  late VideoPlayerController videoPlayer1;
+  late VideoPlayerController videoPlayer2;
+  late VideoPlayerController videoPlayer3;
 
   @override
   void initState() {
     super.initState();
-    FlutterNativeSplash.remove();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      provider = context.read<OnboardingViewModel>();
+      FlutterNativeSplash.remove();
     });
-    controller = VideoPlayerController.asset(Assets.videos.ob4)
+    videoPlayer1 = VideoPlayerController.asset(Assets.videos.ob.ob1)
       ..setLooping(true)
       ..initialize().whenComplete(() {
-        controller.play();
+        videoPlayer1.play();
       });
-    controller1 = VideoPlayerController.asset(Assets.videos.paywall)
+    videoPlayer2 = VideoPlayerController.asset(Assets.videos.ob.ob2)
       ..setLooping(true)
       ..initialize();
-    controller2 = VideoPlayerController.asset(Assets.videos.trend3)
+    videoPlayer3 = VideoPlayerController.asset(Assets.videos.ob.ob3)
       ..setLooping(true)
       ..initialize();
+    onboardings[0].controller = videoPlayer1;
+    onboardings[1].controller = videoPlayer2;
+    onboardings[2].controller = videoPlayer3;
   }
 
   @override
   void dispose() {
-    controller.dispose();
-    controller1.dispose();
-    controller2.dispose();
+    videoPlayer1.dispose();
+    videoPlayer2.dispose();
+    videoPlayer3.dispose();
+    onboardings[0].controller?.dispose();
+    onboardings[1].controller?.dispose();
+    onboardings[2].controller?.dispose();
     super.dispose();
   }
 
   final onboardings = <OnboardingModel>[
     OnboardingModel(
-      title: 'Create Videos in Seconds',
-      subtitle:
-          'Turn your ideas into stunning videos instantly with AI. Just type your prompt and let the magic happen.',
+      title: 'Bring Your\nIdeas to Life',
+      subtitle: 'Turn text into stunning\nvideos—no editing needed.',
+      video: Assets.videos.ob.ob1,
     ),
     OnboardingModel(
-      title: 'Make It Fun & Unexpected',
-      subtitle:
-          'Whether it’s a donkey dancing or something totally wild, AI helps you generate funny, surprising videos with zero effort.',
+      title: 'Make Funny\nVideos with Animals',
+      subtitle: 'Create heart-melting videos\nwith just your voice.',
+      video: Assets.videos.ob.ob2,
     ),
     OnboardingModel(
-      title: 'Unleash Your Imagination',
-      subtitle: 'From fantasy creatures to dream worlds, create unique videos limited only by your creativity.',
-    ),
-    OnboardingModel(
-      title: 'Please review our app',
-      subtitle: 'Your feedback will help us get better for your future convenience',
-      image: Assets.images.reviewUs.path,
+      title: 'Unleash Your\nInner Power',
+      subtitle: 'Walk with tiger, rule the frame—\nno CGI, just AI.',
+      video: Assets.videos.ob.ob3,
     ),
   ];
 
   void changeCurrentIndex() {
+    final provider = context.read<OnboardingViewModel>();
+
     provider.changeCurrentIndex();
-    if (provider.currentIndex == 0) {
-      controller.play();
-      controller1.pause();
-      controller2.pause();
-    } else if (provider.currentIndex == 1) {
-      controller1.play();
-      controller.pause();
-      controller2.pause();
+    if (provider.currentIndex == 1) {
+      videoPlayer2.play();
+      videoPlayer1.pause();
+      videoPlayer3.pause();
     } else {
-      controller2.play();
-      controller.pause();
-      controller1.pause();
+      videoPlayer3.play();
+      videoPlayer2.pause();
+      videoPlayer1.pause();
     }
   }
 }

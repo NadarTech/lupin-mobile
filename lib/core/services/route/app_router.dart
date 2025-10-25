@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:luden/features/bottom_bar/presentation/view/bottom_bar_view.dart';
+import 'package:luden/features/bottom_bar/presentation/view_model/bottom_bar_view_model.dart';
+import 'package:luden/features/popular_video_detail/presentation/view_model/popular_video_detail_view_model.dart';
 import 'package:provider/provider.dart';
 
+import '../../../features/ai_models/presentation/view/ai_models_view.dart';
 import '../../../features/coins/presentation/view/coins_view.dart';
 import '../../../features/coins/presentation/view_model/coins_view_model.dart';
 import '../../../features/completed_video/presentation/view/completed_video_view.dart';
-import '../../../features/generate_by_fal_ai/presentation/view/generate_by_fal_ai_view.dart';
-import '../../../features/generate_by_fal_ai/presentation/view_model/generate_by_fal_ai_view_model.dart';
-import '../../../features/home/presentation/view/home_view.dart';
-import '../../../features/home/presentation/view_model/home_view_model.dart';
 import '../../../features/landing/presentation/view/landing_view.dart';
-import '../../../features/my_videos/presentation/view/my_videos_view.dart';
-import '../../../features/my_videos/presentation/view_model/my_videos_view_model.dart';
 import '../../../features/onboarding/presentation/view/onboarding_view.dart';
 import '../../../features/onboarding/presentation/view_model/onboarding_view_model.dart';
+import '../../../features/popular_video_detail/presentation/view/popular_video_detail_view.dart';
 import '../../../features/settings/presentation/view/settings_view.dart';
 import '../../../features/subscriptions/presentation/view/subscriptions_view.dart';
 import '../../../features/subscriptions/presentation/view_model/subscriptions_view_model.dart';
@@ -42,13 +41,14 @@ class AppRouter {
           builder: (context) => SettingsView(),
           settings: const RouteSettings(name: AppRoutes.settings),
         );
-      case AppRoutes.myVideos:
+      case AppRoutes.bottomBar:
+        final args = settings.arguments as Map<String, dynamic>?;
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
-            create: (BuildContext context) => getIt<MyVideosViewModel>(),
-            child: MyVideosView(),
+            create: (BuildContext context) => getIt<BottomBarViewModel>(),
+            child: BottomBarView(firstOpen: args?['firstOpen']),
           ),
-          settings: const RouteSettings(name: AppRoutes.myVideos),
+          settings: const RouteSettings(name: AppRoutes.bottomBar),
         );
       case AppRoutes.completedVideo:
         final args = settings.arguments as Map<String, dynamic>;
@@ -56,20 +56,10 @@ class AppRouter {
           builder: (context) => CompletedVideoView(video: args['video']),
           settings: const RouteSettings(name: AppRoutes.completedVideo),
         );
-      case AppRoutes.generateByFalAI:
-        return MaterialPageRoute(
-          builder: (context) => ChangeNotifierProvider(
-            create: (BuildContext context) => getIt<GenerateByFalAIViewModel>(),
-            child: GenerateByFalAIView(),
-          ),
-          settings: const RouteSettings(name: AppRoutes.generateByFalAI),
-        );
       case AppRoutes.coins:
         return MaterialPageRoute(
-          builder: (context) => ChangeNotifierProvider(
-            create: (BuildContext context) => getIt<CoinsViewModel>(),
-            child: CoinsView(),
-          ),
+          builder: (context) =>
+              ChangeNotifierProvider(create: (BuildContext context) => getIt<CoinsViewModel>(), child: CoinsView()),
           settings: const RouteSettings(name: AppRoutes.coins),
         );
       case AppRoutes.subscriptions:
@@ -80,21 +70,31 @@ class AppRouter {
           ),
           settings: const RouteSettings(name: AppRoutes.subscriptions),
         );
+      case AppRoutes.aiModels:
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (context) => AiModelsView(aiModels: args['aiModels']),
+          settings: const RouteSettings(name: AppRoutes.aiModels),
+        );
       case AppRoutes.trendVideoDetail:
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
             create: (BuildContext context) => getIt<TrendVideoDetailViewModel>(),
-            child: TrendVideoDetailView(trendVideo: args['trendVideo']),
+            child: TrendVideoDetailView(template: args['template']),
           ),
           settings: const RouteSettings(name: AppRoutes.trendVideoDetail),
         );
-      case AppRoutes.home:
+      case AppRoutes.popularVideoDetail:
+        final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
-          builder: (context) =>
-              ChangeNotifierProvider(create: (BuildContext context) => getIt<HomeViewModel>(), child: HomeView()),
-          settings: const RouteSettings(name: AppRoutes.home),
+          builder: (context) => ChangeNotifierProvider(
+            create: (BuildContext context) => getIt<PopularVideoDetailViewModel>(),
+            child: PopularVideoDetailView(homeModel: args['homeModel']),
+          ),
+          settings: const RouteSettings(name: AppRoutes.popularVideoDetail),
         );
+
       default:
         return MaterialPageRoute(
           builder: (context) => const LandingView(),

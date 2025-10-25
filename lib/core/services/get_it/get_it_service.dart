@@ -1,9 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:luden/features/popular_video_detail/data/data_source/popular_video_detail_data_source.dart';
 
+import '../../../common/data_source/category_data_source.dart';
 import '../../../common/data_source/user_data_source.dart';
+import '../../../common/provider/category/category_provider.dart';
 import '../../../common/provider/user/user_provider.dart';
+import '../../../features/bottom_bar/presentation/view_model/bottom_bar_view_model.dart';
 import '../../../features/coins/presentation/view_model/coins_view_model.dart';
 import '../../../features/generate_by_fal_ai/data/data_source/generate_by_fal_ai_data_source.dart';
 import '../../../features/generate_by_fal_ai/presentation/view_model/generate_by_fal_ai_view_model.dart';
@@ -11,6 +15,7 @@ import '../../../features/home/presentation/view_model/home_view_model.dart';
 import '../../../features/my_videos/data/data_source/my_videos_data_source.dart';
 import '../../../features/my_videos/presentation/view_model/my_videos_view_model.dart';
 import '../../../features/onboarding/presentation/view_model/onboarding_view_model.dart';
+import '../../../features/popular_video_detail/presentation/view_model/popular_video_detail_view_model.dart';
 import '../../../features/subscriptions/presentation/view_model/subscriptions_view_model.dart';
 import '../../../features/trend_video_detail/data/data_source/trend_video_detail_data_source.dart';
 import '../../../features/trend_video_detail/presentation/view_model/trend_video_detail_view_model.dart';
@@ -27,6 +32,7 @@ void setupLocator() {
   getIt.registerSingleton<NetworkService>(NetworkService(Dio(), getIt<StorageService>())).init();
   getIt.registerSingleton<RouteService>(RouteService());
   getIt.registerSingleton<UserProvider>(UserProvider(UserDataSource(getIt<NetworkService>())));
+  getIt.registerSingleton<CategoryProvider>(CategoryProvider(CategoryDataSource(getIt<NetworkService>())));
   getIt.registerFactory<HomeViewModel>(() => HomeViewModel());
   getIt.registerFactory<MyVideosViewModel>(() => MyVideosViewModel(MyVideosDataSource(getIt<NetworkService>())));
   getIt.registerFactory<CoinsViewModel>(() => CoinsViewModel());
@@ -34,8 +40,12 @@ void setupLocator() {
   getIt.registerFactory<GenerateByFalAIViewModel>(
     () => GenerateByFalAIViewModel(GenerateByFalAIDataSource(getIt<NetworkService>())),
   );
+  getIt.registerSingleton<BottomBarViewModel>(BottomBarViewModel());
   getIt.registerFactory<TrendVideoDetailViewModel>(
     () => TrendVideoDetailViewModel(TrendVideoDetailDataSource(getIt<NetworkService>())),
+  );
+  getIt.registerFactory<PopularVideoDetailViewModel>(
+    () => PopularVideoDetailViewModel(PopularVideoDetailDataSource(getIt<NetworkService>())),
   );
   getIt.registerFactory<OnboardingViewModel>(() => OnboardingViewModel());
 }

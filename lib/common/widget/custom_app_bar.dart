@@ -10,6 +10,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool? centerTitle;
   final bool? automaticallyImplyLeading;
   final int? fontSize;
+  final Function()? onTap;
 
   const CustomAppBar({
     super.key,
@@ -18,12 +19,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.centerTitle,
     this.automaticallyImplyLeading,
     this.fontSize,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(title, style: AppStyles.medium(fontSize: fontSize?.w ?? 18)),
+      title: GestureDetector(
+        onTap: onTap,
+        child: Padding(
+          padding: EdgeInsets.only(left: 8.w),
+          child: Text(title, style: AppStyles.medium(fontSize: fontSize?.w ?? 23)),
+        ),
+      ),
+      titleSpacing: 2,
       actions: actions,
       forceMaterialTransparency: true,
       automaticallyImplyLeading: automaticallyImplyLeading ?? true,

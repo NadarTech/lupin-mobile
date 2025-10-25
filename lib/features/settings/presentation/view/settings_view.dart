@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
-import '../../../../common/provider/user/user_provider.dart';
-import '../../../../common/widget/custom_app_bar.dart';
+import '../../../../common/widget/is_premium.dart';
 import '../../../../core/consts/color/app_colors.dart';
 import '../../../../core/consts/gen/assets.gen.dart';
 import '../../../../core/consts/route/app_routes.dart';
@@ -25,74 +24,63 @@ class _SettingsViewState extends State<SettingsView> with SettingsMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            if (getIt<UserProvider>().user.premium == false)
-              GestureDetector(
-                onTap: () {
-                  getIt<RouteService>().go(path: AppRoutes.subscriptions);
-                },
-                child: Container(
-                  width: context.width,
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.symmetric(vertical: 24.h, horizontal: 9.w),
-                  padding: EdgeInsets.symmetric(vertical: 50.h, horizontal: 16.w),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16.r),
-                    image: DecorationImage(image: AssetImage(Assets.images.colorful.path), fit: BoxFit.fill),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        child: IsPremium(
+          builder: (bool isPremium) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if(isPremium != true)...[
+                  Text('Premium', style: AppStyles.regular()),
+                  SizedBox(height: 12.h),
+                  GestureDetector(
+                    onTap: () => getIt<RouteService>().go(path: AppRoutes.subscriptions),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 14.w),
+                      decoration: BoxDecoration(
+                        color: AppColors.grey.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Row(
+                        children: [
+                          Assets.icons.premium.svg(width: 30.w),
+                          SizedBox(width: 8.w),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Upgrade to Premium', style: AppStyles.medium()),
+                              SizedBox(height: 2.h),
+                              Text(
+                                'Unlock all premium features',
+                                style: AppStyles.regular(fontSize: 11, color: AppColors.grey.withValues(alpha: 0.7)),
+                              ),
+                            ],
+                          ),
+                          Spacer(),
+                          Assets.icons.rightArrow.svg(width: 20, color: AppColors.grey),
+                        ],
+                      ),
+                    ),
                   ),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(16.r)),
-                    child: Text('Go Premium', style: AppStyles.bold(fontSize: 26)),
-                  ),
+                  SizedBox(height: 24.h),
+                ],
+                Text('Support and Legal', style: AppStyles.regular()),
+                SizedBox(height: 12.h),
+                buildBox(
+                  icon: Assets.icons.contact,
+                  text: 'Contact',
+                  onTap: () {
+                    launchUrlString('mailto:yusuf.nadaroglu@nadartech.com?subject=Subject&body=Hi%20Team');
+                  },
                 ),
-              ),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 8.w),
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(12.r), color: AppColors.secondary),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  buildBox(icon: Assets.icons.identifier, text: 'Copy User ID', iconWidth: 16, onTap: copyUserId),
-                  buildDivider(context),
-                  buildBox(icon: Assets.icons.aiModels, text: 'My Videos', iconWidth: 16, onTap: goMyVideos),
-                ],
-              ),
-            ),
-            SizedBox(height: 20.h),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 9.w),
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(12.r), color: AppColors.secondary),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  buildBox(icon: Assets.icons.heart, text: 'Rate Us', onTap: rateUs),
-                  buildDivider(context),
-                  buildBox(icon: Assets.icons.send, text: 'Share', iconWidth: 18, onTap: shareUs),
-                  buildDivider(context),
-                  buildBox(icon: Assets.icons.termsOfUse, text: 'Terms of Use', onTap: goTermsOfUse),
-                  buildDivider(context),
-                  Consumer<UserProvider>(
-                    builder: (BuildContext context, provider, Widget? child) {
-                      if (provider.user.premium != true) {
-                        return Column(
-                          children: [
-                            buildBox(icon: Assets.icons.restore, text: 'Restore Purchase', onTap: restorePurchase),
-                            buildDivider(context),
-                          ],
-                        );
-                      } else {
-                        return SizedBox.shrink();
-                      }
-                    },
-                  ),
-                  buildBox(icon: Assets.icons.secure, text: 'Privacy Policy', onTap: goPrivacyPolicy),
-                ],
-              ),
-            ),
-          ],
+                buildBox(icon: Assets.icons.rateUs, text: 'Rate Us', onTap: rateUs),
+                buildBox(icon: Assets.icons.share, text: 'Share App', onTap: shareUs),
+                buildBox(icon: Assets.icons.termsOfUse, text: 'Terms of Use', onTap: goTermsOfUse),
+                buildBox(icon: Assets.icons.privacyPolicy, text: 'Privacy Policy', onTap: goPrivacyPolicy),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -109,24 +97,37 @@ class _SettingsViewState extends State<SettingsView> with SettingsMixin {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        color: AppColors.transparent,
-        padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.w),
+        margin: EdgeInsets.only(bottom: 12.h),
+        padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 14.w),
+        decoration: BoxDecoration(
+          color: AppColors.grey.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(8.r),
+        ),
         child: Row(
           children: [
-            icon.svg(width: iconWidth?.w ?? 20.w, color: AppColors.white),
-            SizedBox(width: 24.w),
-            Text(text, style: AppStyles.semiBold(fontSize: 16)),
+            icon.svg(width: 30.w),
+            SizedBox(width: 8.w),
+            Text(text, style: AppStyles.medium()),
+            Spacer(),
+            Assets.icons.rightArrow.svg(width: 20, color: AppColors.grey),
           ],
         ),
       ),
     );
   }
 
-  CustomAppBar buildAppBar() {
-    return CustomAppBar(
-      title: 'Settings',
+  AppBar buildAppBar() {
+    return AppBar(
       automaticallyImplyLeading: false,
-      centerTitle: true,
+      centerTitle: false,
+      titleSpacing: 16.w,
+      title: Row(
+        children: [
+          Assets.images.splashLogo.svg(width: 30),
+          SizedBox(width: 10.w),
+          Text('Luden AI', style: AppStyles.semiBold(fontSize: 16)),
+        ],
+      ),
       actions: [
         GestureDetector(
           onTap: getIt<RouteService>().pop,

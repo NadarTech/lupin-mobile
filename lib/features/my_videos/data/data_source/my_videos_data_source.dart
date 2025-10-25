@@ -14,7 +14,7 @@ class MyVideosDataSource {
 
   Future<Either<BaseErrorModel, List<VideoModel>>> getVideos() async {
     return _networkService.call(
-      AppEndpoints.video,
+      AppEndpoints.getVideos,
       mapper: (json) => APIModelMapper.jsonToList(json, VideoModel.fromJson),
       httpTypes: HttpTypes.get,
     );
